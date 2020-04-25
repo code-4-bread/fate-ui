@@ -5,9 +5,12 @@ import { Helmet } from 'react-helmet';
 import { Grommet } from 'grommet';
 import styled from 'styled-components';
 import theme from './theme/theme';
-import Header from './pages/Header/Header';
-import BasePage from './pages/BasePage/BasePage';
+import Header from './components/Header/Header';
+import Home from './pages/Home/Home';
+import About from './pages/About/About';
+import History from './pages/History/History';
 import Page404 from './pages/Page404/Page404';
+import Session from './pages/Session/Session';
 
 const StyledBody = styled('div')`
   margin-left: 20%;
@@ -24,9 +27,10 @@ ReactDOM.render(
       <StyledBody>
         <Header />
         <Switch>
-          <Route exact path="/" component={BasePage} />
-          {/* <Route exact location="/history" component={} /> */}
-          {/* <Route exact location="/about" component={} /> */}
+          <Route exact path="/" component={Home} />
+          <Route exact path="/history" component={History} />
+          <Route exact path="/about" component={About} />
+          <Route exact path="/session/:id" component={Session} />
           <Route component={Page404} />
         </Switch>
       </StyledBody>
