@@ -114,4 +114,4 @@ modules.xml
 
 # End of https://www.gitignore.io/api/webstorm+all
 
-/.idea/
+.idea/workspace.xml
