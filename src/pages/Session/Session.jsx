@@ -9,6 +9,8 @@ import { CheckSquare } from '@styled-icons/fa-regular';
 import styled from 'styled-components';
 import VoteBoxes from '../../components/VoteBoxes/VoteBoxes';
 import { Colors } from '../../theme/theme';
+import { post } from '../../utils/request';
+import VoteResult from '../../components/VoteResult/VoteResult';
 
 const StyledText = styled(Text)`
   text-align: center;
@@ -37,11 +39,12 @@ class Session extends Component {
     };
 
     this.handleSetVote = this.handleSetVote.bind(this);
-    this.handleSessionStart = this.handleSessionStart.bind(this);
+    this.handleCalculateVote = this.handleCalculateVote.bind(this);
+    this.handleRestart = this.handleRestart.bind(this);
   }
 
   componentDidMount() {
-    const { sessionId } = this.state;
+    const { sessionId, userId } = this.state;
 
     this.webSocket = socketIoClient(process.env.REACT_APP_API_URL);
     this.webSocket.on('connect', () => {
@@ -55,12 +58,15 @@ class Session extends Component {
           state,
         } = data;
 
+        const existingVote = votes.filter((each) => each.voter === userId);
+
         this.setState(() => ({
           participants,
           sessionOwnerId,
           title,
           votes,
           state,
+          currentVote: existingVote.length !== 0 ? existingVote[0].votePoint : '',
         }));
       });
     });
@@ -86,8 +92,20 @@ class Session extends Component {
     }));
   }
 
-  handleSessionStart() {
-    console.log('Session Started');
+  async handleCalculateVote() {
+    const { sessionId } = this.state;
+
+    await post(`sessions/${sessionId}`, {
+      action: 'sessionCalculate',
+    });
+  }
+
+  async handleRestart() {
+    const { sessionId } = this.state;
+
+    await post(`sessions/${sessionId}`, {
+      action: 'sessionRestart',
+    });
   }
 
   render() {
@@ -124,8 +142,38 @@ class Session extends Component {
         </Grid>
       );
     }
-    
-    console.log(votes);
+
+    const VoteCounts = () => {
+      const votedUserIds = votes.map((vote) => vote.voter);
+      const pendingToVote = participants.filter((each) => (!votedUserIds.includes(each.userId) && !each.isOwner));
+
+      const pendingUserNames = pendingToVote.map((e) => e.name);
+
+      if (participants.length === 1) {
+        return (
+          <Text margin={{ top: 'medium' }} weight="bold" size="large">No one has joined yet.</Text>
+        );
+      }
+
+      if (pendingUserNames.length === 0) {
+        return (
+          <Text margin={{ top: 'medium' }} weight="bold" size="large">Everyone has given a vote.</Text>
+        );
+      }
+
+      return (
+        <Box>
+          <Text margin={{ top: 'medium' }} weight="bold" size="large">Pending to vote users</Text>
+          {
+            pendingUserNames.map((name, index) => (
+              <Text margin={{ top: 'small' }} size="medium" key={name}>
+                {`${index + 1}. ${name}`}
+              </Text>
+            ))
+          }
+        </Box>
+      );
+    };
 
     const votePanel = currentVote
       ? (
@@ -145,7 +193,7 @@ class Session extends Component {
     const adminPanel = (
       <Box flex basis="auto" margin={{ left: 'xlarge' }}>
         <Text alignSelf="center" size="xxlarge" weight="bold">Admin Panel</Text>
-        <Text alignSelf="start" size="large" margin={{ top: 'medium' }}>Start the session if all the participants has joined.</Text>
+        <VoteCounts />
         <Button
           margin={{ top: 'medium' }}
           label="Calculate votes"
@@ -155,7 +203,23 @@ class Session extends Component {
       </Box>
     );
 
-    const mainPanel = sessionOwnerId === userId ? adminPanel : votePanel;
+    let mainPanel = sessionOwnerId === userId ? adminPanel : votePanel;
+
+    if (state === 'calculated') {
+      mainPanel = (
+        <>
+          <VoteResult participants={participants} votes={votes} />
+          {sessionOwnerId === userId && (
+            <Button
+              margin={{ top: 'medium' }}
+              label="Restart session"
+              size="large"
+              onClick={this.handleRestart}
+            />
+          )}
+        </>
+      );
+    }
 
     return (
       <>
