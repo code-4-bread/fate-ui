@@ -32,7 +32,7 @@ ReactDOM.render(
           <Route exact path="/" component={Home} />
           <Route exact path="/history" component={History} />
           <Route exact path="/about" component={About} />
-          <Route exact path="/session/:id" component={Session} />
+          <Route exact path="/session/:sessionId/:userId" component={Session} />
           <Route component={Page404} />
         </Switch>
       </StyledBody>
