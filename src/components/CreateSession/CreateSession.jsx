@@ -49,7 +49,7 @@ const CreateSession = ({ size }) => {
 
       localStorage.setItem('sessions', JSON.stringify(session));
 
-      history.push(`/session/${id}`);
+      history.push(`/session/${id}/${userId}`);
     } catch (e) {
       setLoading(false);
       console.log(e);
