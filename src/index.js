@@ -13,8 +13,10 @@ import Page404 from './pages/Page404/Page404';
 import Session from './pages/Session/Session';
 
 const StyledBody = styled('div')`
-  margin-left: 20%;
-  margin-right: 20%
+  @media (min-width: 600px) {
+    margin-left: 20%;
+    margin-right: 20%
+  }
 `;
 
 ReactDOM.render(
