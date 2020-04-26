@@ -1,52 +1,44 @@
-import React, { useState, useEffect } from 'react';
-import { List, Box, Button, Text } from 'grommet';
-import { useHistory } from 'react-router-dom';
+//! TODO Revist later
 
-
-const CurrentSessions = () => {
-  const [sessions, setSessions] = useState([
-    {
-      name: 'POS-123',
-    },
-    {
-      name: 'POS-234',
-    },
-    {
-      name: 'POS-345',
-    },
-    {
-      name: 'POS-456',
-    },
-    {
-      name: 'POS-567',
-    },
-  ]);
-
-  const history = useHistory();
-
-  return (
-    <List
-      primaryKey="name"
-      data={sessions}
-      step={10}
-      children={(item) => (
-        <Box direction="row" gap="medium">
-          <Box>
-            <Text weight="bold">{item.name}</Text>
-          </Box>
-          <Box>
-            <Button
-              plain
-              label="Join"
-              focusIndicator={false}
-              background="accent"
-              onClick={() => history.push(`/session/${item.name}`)}
-            />
-          </Box>
-        </Box>
-      )}
-    />
-  );
-};
-
-export default CurrentSessions;
+// import React, { useState, useEffect } from 'react';
+// import {
+//   List, Box, Button, Text,
+// } from 'grommet';
+// import { useHistory } from 'react-router-dom';
+// import { get } from '../../utils/request';
+//
+//
+// const CurrentSessions = () => {
+//   const [sessions, setSessions] = useState([]);
+//
+//   useEffect(() => {
+//     const getSessions = async () => {
+//       const result = await get('sessions');
+//
+//       const {
+//         data,
+//       } = result;
+//
+//       setSessions(data.data);
+//     };
+//
+//     getSessions();
+//   }, []);
+//
+//   return (
+//     <List
+//       primaryKey="title"
+//       data={sessions}
+//       step={10}
+//       children={(item) => (
+//         <Box direction="row" gap="medium">
+//           <Box>
+//             <Text weight="bold">{item.title}</Text>
+//           </Box>
+//         </Box>
+//       )}
+//     />
+//   );
+// };
+//
+// export default CurrentSessions;
