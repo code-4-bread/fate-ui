@@ -33,7 +33,7 @@ class Session extends Component {
       title: '',
       votes: [],
       currentVote: '',
-      sessionState: '',
+      state: '',
     };
 
     this.handleSetVote = this.handleSetVote.bind(this);
@@ -73,6 +73,14 @@ class Session extends Component {
   }
 
   handleSetVote(vote) {
+    const { sessionId, userId } = this.state;
+
+    this.webSocket.emit('setVote', {
+      sessionId,
+      userId,
+      vote,
+    });
+
     this.setState(() => ({
       currentVote: vote,
     }));
@@ -116,6 +124,8 @@ class Session extends Component {
         </Grid>
       );
     }
+    
+    console.log(votes);
 
     const votePanel = currentVote
       ? (
@@ -138,13 +148,12 @@ class Session extends Component {
         <Text alignSelf="start" size="large" margin={{ top: 'medium' }}>Start the session if all the participants has joined.</Text>
         <Button
           margin={{ top: 'medium' }}
-          label="Start session"
+          label="Calculate votes"
           size="large"
-          onClick={this.handleSessionStart}
+          onClick={this.handleCalculateVote}
         />
       </Box>
     );
-
 
     const mainPanel = sessionOwnerId === userId ? adminPanel : votePanel;
 
