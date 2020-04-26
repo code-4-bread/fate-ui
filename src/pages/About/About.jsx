@@ -1,12 +1,14 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
+import { Heading, Paragraph, Anchor } from 'grommet';
 
 const About = () => (
   <>
     <Helmet>
       <title>About</title>
     </Helmet>
-    <h1>About Page</h1>
+    <Heading>About</Heading>
+    <Paragraph>Scrum poker tool developed by <Anchor target="_blank" href="https://github.com/code-4-bread/">Code4Bread</Anchor></Paragraph>
   </>
 );
 
