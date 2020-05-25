@@ -117,6 +117,7 @@ class Session extends Component {
       currentVote,
       userId,
       state,
+      sessionId,
     } = this.state;
 
     if (state === 'ended') {
@@ -145,7 +146,9 @@ class Session extends Component {
 
     const VoteCounts = () => {
       const votedUserIds = votes.map((vote) => vote.voter);
-      const pendingToVote = participants.filter((each) => (!votedUserIds.includes(each.userId) && !each.isOwner));
+      const pendingToVote = participants.filter(
+        (each) => (!votedUserIds.includes(each.userId) && !each.isOwner),
+      );
 
       const pendingUserNames = pendingToVote.map((e) => e.name);
 
@@ -226,10 +229,17 @@ class Session extends Component {
         <Box margin={{ bottom: 'large' }}>
           <Helmet><title>{title}</title></Helmet>
           <Box>
-            <Text size="xxlarge">
+            <Text size="large">
               <b>Session Name:</b>
               {' '}
               {title}
+            </Text>
+          </Box>
+          <Box>
+            <Text size="large">
+              <b>Session Id:</b>
+              {' '}
+              {sessionId}
             </Text>
           </Box>
         </Box>
